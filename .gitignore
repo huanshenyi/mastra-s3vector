@@ -7,3 +7,14 @@ dist
 *.db
 *.db-*
 .mcp.json
+
+# Lambda build output
+lambda-dist
+
+# CDK
+infra/dist
+infra/node_modules
+infra/cdk.out
+
+.claude/
+.kiro/

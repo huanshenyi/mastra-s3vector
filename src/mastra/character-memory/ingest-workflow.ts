@@ -12,10 +12,11 @@ import { embed, embedMany } from 'ai';
 import { createBedrockEmbeddingModel } from '../../lib/bedrock-providers';
 import { extractMemoryFromEpisode } from './extract-memory';
 import {
+  CHARACTER_MEMORY_INDEX,
   createCharacterMemoryStore,
   ensureIndex,
   generateVectorId,
-  CHARACTER_MEMORY_INDEX,
+  getIndexName,
 } from './vector-store';
 import type { EpisodeDelta, MemoryVectorMetadata } from './types';
 
@@ -135,12 +136,14 @@ export const ingestEpisodeWorkflow = createWorkflow({
 
 /**
  * 単体でエピソードをIngestする関数
+ * @param storyId 物語ID（インデックス名に使用）
  */
 export async function ingestEpisode(
   episodeId: string,
   episodeNo: number,
   episodeText: string,
-  version: number = 1
+  version: number = 1,
+  storyId?: string
 ): Promise<{
   episodeId: string;
   episodeNo: number;
@@ -203,9 +206,10 @@ export async function ingestEpisode(
 
   // 4. S3Vectorsにupsert
   const store = createCharacterMemoryStore();
-  await ensureIndex(store);
+  const indexName = getIndexName(storyId);
+  await ensureIndex(store, storyId);
   await store.upsert({
-    indexName: CHARACTER_MEMORY_INDEX,
+    indexName,
     vectors: embeddings,
     metadata,
     ids: vectorIds,

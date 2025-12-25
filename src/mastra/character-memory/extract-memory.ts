@@ -11,8 +11,8 @@ import { createBedrockModel } from '../../lib/bedrock-providers';
 import type { CharacterId, EpisodeDelta, MemoryFact, ExtractedMemory } from './types';
 import { CHARACTERS } from './types';
 
-// 抽出に使用するモデル
-const extractModel = createBedrockModel('us.anthropic.claude-sonnet-4-5-20250929-v1:0');
+// 抽出に使用するモデル（Haiku: コスト効率が良い）
+const extractModel = createBedrockModel('us.anthropic.claude-3-5-haiku-20241022-v1:0');
 
 // キャラクターIDのリスト
 const characterIds = Object.keys(CHARACTERS) as CharacterId[];
